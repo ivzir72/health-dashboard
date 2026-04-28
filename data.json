@@ -5,8 +5,13 @@
     "steps": 8000,
     "workout": "Day 1 Complete"
   },
+  "profile": {
+    "targetCalories": 2000,
+    "targetSteps": 10000,
+    "startWeight": 95
+  },
   "history": [
-    { "date": "Day 1", "weight": 94 },
-    { "date": "Day 2", "weight": 93.8 }
+    { "date": "Day 1", "weight": 94, "calories": 1900 },
+    { "date": "Day 2", "weight": 93.8, "calories": 1800 }
   ]
 }
