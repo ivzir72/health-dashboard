@@ -1,0 +1,12 @@
+{
+  "latest": {
+    "weight": 94,
+    "calories": 1800,
+    "steps": 8000,
+    "workout": "Day 1 Complete"
+  },
+  "history": [
+    { "date": "Day 1", "weight": 94 },
+    { "date": "Day 2", "weight": 93.8 }
+  ]
+}
