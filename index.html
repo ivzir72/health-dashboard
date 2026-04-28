@@ -100,6 +100,12 @@ body {
   padding: 20px;
   border-radius: 15px;
 }
+
+/* Insights */
+.insights p {
+  margin: 8px 0;
+  font-size: 14px;
+}
 </style>
 </head>
 
@@ -157,6 +163,13 @@ body {
   <canvas id="weightChart"></canvas>
 </div>
 
+<div class="chart-box insights">
+  <h3>🧠 Smart Insights</h3>
+  <p id="insight"></p>
+  <p id="deficit"></p>
+  <p id="fatloss"></p>
+</div>
+
 </div>
 
 <script>
@@ -164,18 +177,19 @@ body {
 document.getElementById("date").innerText = new Date().toDateString();
 
 // Fetch data
-fetch('data.json')
+fetch('https://ivzir72.github.io/health-dashboard/data.json')
 .then(res => res.json())
 .then(data => {
 
+  // Basic data
   document.getElementById("weight").innerText = data.latest.weight + " kg";
   document.getElementById("calories").innerText = data.latest.calories + " kcal";
   document.getElementById("steps").innerText = data.latest.steps;
   document.getElementById("workout").innerText = data.latest.workout;
 
   // Progress bars
-  document.getElementById("calorieBar").style.width = (data.latest.calories / 2000 * 100) + "%";
-  document.getElementById("stepBar").style.width = (data.latest.steps / 10000 * 100) + "%";
+  document.getElementById("calorieBar").style.width = (data.latest.calories / data.profile.targetCalories * 100) + "%";
+  document.getElementById("stepBar").style.width = (data.latest.steps / data.profile.targetSteps * 100) + "%";
 
   // Chart
   new Chart(document.getElementById('weightChart'), {
@@ -192,6 +206,30 @@ fetch('data.json')
       plugins: { legend: { display: false } }
     }
   });
+
+  // 🔥 SMART ANALYTICS
+
+  let deficit = data.profile.targetCalories - data.latest.calories;
+
+  let weeklyDeficit = data.history.reduce((sum, d) => {
+    return sum + (data.profile.targetCalories - (d.calories || 0));
+  }, 0);
+
+  let fatLoss = (weeklyDeficit / 7700).toFixed(2);
+
+  let insightMsg = "";
+
+  if (deficit > 300) {
+    insightMsg = "🔥 Strong fat loss zone. Keep going!";
+  } else if (deficit > 0) {
+    insightMsg = "👍 Mild deficit. Progress is steady.";
+  } else {
+    insightMsg = "⚠️ Calorie surplus. Adjust diet.";
+  }
+
+  document.getElementById("deficit").innerText = "Daily Deficit: " + deficit + " kcal";
+  document.getElementById("fatloss").innerText = "Estimated Fat Loss: " + fatLoss + " kg/week";
+  document.getElementById("insight").innerText = insightMsg;
 
 });
 </script>
